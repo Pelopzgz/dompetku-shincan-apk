@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>DompetKu - Edisi Spesial Crayon Shin-chan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --shin-ink: #1E1B18;
+      --shin-cream: #FFFDF5;
+      --shin-yellow: #FFD93D;
+      --shin-red: #FF4D4D;
+      --shin-green: #4ADE80;
+      --shin-pink: #FF85B3;
+      --shin-blue: #38BDF8;
+      --shin-purple: #C084FC;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--shin-cream);
+      background-image:
+        radial-gradient(#E5D7B8 1.6px, transparent 1.6px),
+        radial-gradient(#F3E7CC 1.6px, var(--shin-cream) 1.6px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+      color: var(--shin-ink);
+      overflow-x: hidden;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    h1, h2, h3, .font-cartoon {
+      font-family: 'Fredoka', cursive, sans-serif;
+      letter-spacing: 0.015em;
+    }
+
+    /* Motif Piyama Ikonik Shin-chan */
+    .pajama-pattern {
+      background-color: #7CE38B;
+      background-image:
+        linear-gradient(45deg, #FBBF24 22%, transparent 22%),
+        linear-gradient(-45deg, #38BDF8 22%, transparent 22%),
+        radial-gradient(circle at 75% 30%, #FF6B8B 14%, transparent 15%);
+      background-size: 26px 26px;
+    }
+
+    /* Kartu & Tombol Gaya Komik */
+    .comic-card {
+      background: #FFFFFF;
+      border: 3px solid var(--shin-ink);
+      box-shadow: 5px 5px 0px var(--shin-ink);
+      border-radius: 1.35rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .comic-card-sm {
+      background: #FFFFFF;
+      border: 3px solid var(--shin-ink);
+      box-shadow: 3px 3px 0px var(--shin-ink);
+      border-radius: 1rem;
+    }
+
+    .comic-btn {
+      border: 3px solid var(--shin-ink);
+      box-shadow: 4px 4px 0px var(--shin-ink);
+      transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
+      cursor: pointer;
+    }
+
+    .comic-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0px var(--shin-ink); }
+    .comic-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0px var(--shin-ink); }
+
+    .comic-input {
+      border: 3px solid var(--shin-ink);
+      box-shadow: 3px 3px 0px var(--shin-ink);
+      background-color: #FFFFFF;
+      transition: all 0.15s ease;
+    }
+
+    .comic-input:focus {
+      outline: none;
+      background-color: #FFFBEB;
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0px var(--shin-ink);
+    }
+
+    /* Kumpulan Animasi Karakter Shin-chan */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(-4deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    @keyframes floatReverse {
+      0%, 100% { transform: translateY(0px) rotate(6deg); }
+      50% { transform: translateY(-9px) rotate(-5deg); }
+    }
+
+    @keyframes eyebrowWiggle {
+      0%, 82%, 100% { transform: translateY(0px) rotate(0deg); }
+      86% { transform: translateY(-4px) rotate(-4deg); }
+      90% { transform: translateY(1px) rotate(2deg); }
+      94% { transform: translateY(-3px) rotate(-3deg); }
+    }
+
+    @keyframes shinchanDance {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      20% { transform: rotate(-10deg) translateX(-4px) scale(1.06); }
+      40% { transform: rotate(10deg) translateX(4px) scale(1.06); }
+      60% { transform: rotate(-8deg) translateY(-4px); }
+      80% { transform: rotate(8deg) translateY(-2px); }
+    }
+
+    @keyframes shiroSleep {
+      0%, 100% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.04) translateY(-2px); }
+    }
+
+    @keyframes zzzBubble {
+      0% { opacity: 0; transform: translate(0, 0) scale(0.7); }
+      50% { opacity: 1; transform: translate(6px, -8px) scale(1); }
+      100% { opacity: 0; transform: translate(12px, -16px) scale(1.15); }
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.85) translateY(8px); }
+      70% { opacity: 1; transform: scale(1.03) translateY(-2px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(-10px) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translateY(90px) rotate(360deg) scale(0.6); opacity: 0; }
+    }
+
+    .anim-float { animation: floatSlow 4.2s ease-in-out infinite; }
+    .anim-float-rev { animation: floatReverse 4.8s ease-in-out infinite; }
+    .anim-eyebrow { animation: eyebrowWiggle 3.6s ease-in-out infinite; transform-origin: center; }
+    .anim-dance { animation: shinchanDance 0.65s ease-in-out; }
+    .anim-shiro { animation: shiroSleep 2.6s ease-in-out infinite; }
+    .anim-zzz-1 { animation: zzzBubble 2.4s ease-out infinite; }
+    .anim-zzz-2 { animation: zzzBubble 2.4s ease-out 0.8s infinite; }
+    .anim-pop { animation: popIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #FFF7D6; }
+    ::-webkit-scrollbar-thumb { background: #FFD93D; border: 2px solid #1E1B18; border-radius: 99px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Stiker Dekoratif Kasukabe Melayang di Latar -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-35 sm:opacity-55" aria-hidden="true">
+    <!-- Stiker Kotak Chocobi -->
+    <svg class="w-16 h-16 absolute top-28 left-3 anim-float" viewBox="0 0 80 80">
+      <polygon points="40,6 70,22 70,58 40,74 10,58 10,22" fill="#FF6B9D" stroke="#1E1B18" stroke-width="4"/>
+      <polygon points="40,14 62,26 62,54 40,66 18,54 18,26" fill="#FF94B8" stroke="#1E1B18" stroke-width="2.5"/>
+      <polygon points="40,22 44,33 56,33 46,40 50,51 40,44 30,51 34,40 24,33 36,33" fill="#FFD93D" stroke="#1E1B18" stroke-width="2.5"/>
+    </svg>
+    <!-- Stiker Buaya Pink Waniyama-san -->
+    <svg class="w-20 h-20 absolute bottom-24 right-3 anim-float-rev" viewBox="0 0 90 90">
+      <path d="M18 52 C14 34, 34 22, 54 26 L74 22 L68 38 C76 46, 72 64, 52 66 L26 66 C18 66, 16 58, 18 52 Z" fill="#FF85B3" stroke="#1E1B18" stroke-width="4"/>
+      <circle cx="42" cy="34" r="6" fill="#FFF" stroke="#1E1B18" stroke-width="3"/>
+      <circle cx="43" cy="34" r="2.5" fill="#1E1B18"/>
+      <path d="M54 44 L72 44 M58 44 L61 49 L64 44 L67 49 L70 44" stroke="#1E1B18" stroke-width="2.5" fill="none"/>
+    </svg>
+    <!-- Stiker Lencana Bintang Action Kamen -->
+    <svg class="w-14 h-14 absolute top-1/2 right-4 anim-float" viewBox="0 0 70 70">
+      <circle cx="35" cy="35" r="28" fill="#38BDF8" stroke="#1E1B18" stroke-width="4"/>
+      <polygon points="35,13 41,27 56,28 45,38 48,53 35,45 22,53 25,38 14,28 29,27" fill="#FFD93D" stroke="#1E1B18" stroke-width="3"/>
+    </svg>
+  </div>
+
+  <!-- Container Efek Confetti Transaksi -->
+  <div id="confettiLayer" class="fixed inset-0 pointer-events-none z-50 overflow-hidden"></div>
+  <!-- Header Utama Tema Crayon Shin-chan -->
+  <header class="bg-[#FFD93D] border-b-4 border-[#1E1B18] sticky top-0 z-30 shadow-[0_4px_0px_#1E1B18]">
+    <!-- Strip Motif Piyama Shin-chan -->
+    <div class="h-2.5 w-full pajama-pattern border-b-2 border-[#1E1B18]"></div>
+
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Maskot Interaktif Shin-chan (Bisa Ditekan!) -->
+      <div class="flex items-center gap-3">
+        <button id="shinchanMascotBtn" type="button" onclick="triggerShinchanDance()" title="Ketuk Shin-chan!"
+          class="relative group focus:outline-none cursor-pointer">
+          <div id="shinchanAvatarBox" class="w-14 h-14 sm:w-16 sm:h-16 bg-[#FF4D4D] border-3 border-[#1E1B18] rounded-2xl shadow-[3px_3px_0px_#1E1B18] flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
+            <!-- Ilustrasi SVG Shin-chan dengan Alis Bergerak -->
+            <svg viewBox="0 0 110 110" class="w-14 h-14 sm:w-15 sm:h-15">
+              <!-- Kaos Merah & Celana Kuning -->
+              <path d="M26 106 C26 86, 84 86, 84 106 Z" fill="#FF2E2E" stroke="#1E1B18" stroke-width="4"/>
+              <rect x="34" y="99" width="42" height="10" fill="#FFD93D" stroke="#1E1B18" stroke-width="3"/>
+              <!-- Telinga & Kepala Khas Pipi Chubby -->
+              <circle cx="24" cy="54" r="9" fill="#FDBA8C" stroke="#1E1B18" stroke-width="4"/>
+              <path d="M27 42 C25 22, 83 20, 84 44 C85 52, 93 56, 93 66 C93 79, 80 86, 61 86 C40 86, 26 76, 27 42 Z" fill="#FDBA8C" stroke="#1E1B18" stroke-width="4"/>
+              <!-- Rambut Cepak Hitam -->
+              <path d="M27 43 C27 20, 83 19, 84 43 C74 35, 62 34, 54 38 C45 34, 34 35, 27 43 Z" fill="#1E1B18"/>
+              <!-- Alis Tebal Bergerak -->
+              <g class="anim-eyebrow">
+                <path d="M36 45 Q45 38 53 45" fill="none" stroke="#1E1B18" stroke-width="6.5" stroke-linecap="round"/>
+                <path d="M58 44 Q67 37 76 44" fill="none" stroke="#1E1B18" stroke-width="6.5" stroke-linecap="round"/>
+              </g>
+              <!-- Mata Bulat Besar -->
+              <circle cx="45" cy="55" r="6.5" fill="#1E1B18"/>
+              <circle cx="43" cy="53" r="2.2" fill="#FFFFFF"/>
+              <circle cx="67" cy="54" r="6.5" fill="#1E1B18"/>
+              <circle cx="65" cy="52" r="2.2" fill="#FFFFFF"/>
+              <!-- Rona Pipi & Mulut O -->
+              <ellipse cx="35" cy="65" rx="4.5" ry="2.8" fill="#FF758F" opacity="0.75"/>
+              <ellipse cx="79" cy="65" rx="5.5" ry="3.2" fill="#FF758F" opacity="0.75"/>
+              <ellipse cx="58" cy="72" rx="6" ry="7" fill="#E11D48" stroke="#1E1B18" stroke-width="3"/>
+            </svg>
+          </div>
+          <span class="absolute -bottom-1.5 -right-1.5 bg-[#FFFDF5] text-[#1E1B18] text-[9px] font-black px-1.5 py-0.2 rounded-full border-2 border-[#1E1B18]">TAP!</span>
+        </button>
+
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-xl sm:text-2xl font-bold text-[#1E1B18] tracking-tight">DompetKu Shin-chan</h1>
+            <span class="text-[11px] font-black uppercase bg-[#FF4D4D] text-white px-2.5 py-0.5 rounded-full border-2 border-[#1E1B18] shadow-[2px_2px_0px_#1E1B18]">Kasukabe</span>
+          </div>
+          <!-- Balon Dialog Komik Dinamis -->
+          <div class="mt-1 inline-flex items-center gap-1.5 bg-white px-2.5 py-0.5 rounded-xl border-2 border-[#1E1B18] shadow-[2px_2px_0px_#1E1B18]">
+            <span class="w-2 h-2 rounded-full bg-[#4ADE80] border border-[#1E1B18]"></span>
+            <p id="shinchanSpeech" class="text-xs font-extrabold text-[#1E1B18]">Hore! Ayo nabung buat beli Chocobi!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tombol Aksi Header -->
+      <div class="flex items-center gap-2">
+        <button id="exportBtn" type="button"
+          class="comic-btn inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-extrabold text-[#1E1B18] bg-[#4ADE80] rounded-xl">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+          </svg>
+          <span>Ekspor CSV</span>
+        </button>
+        <button id="resetBtn" type="button"
+          class="comic-btn inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-extrabold text-white bg-[#FF4D4D] rounded-xl">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          <span>Reset</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Konten Utama -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-5 space-y-6 relative z-10">
+
+    <!-- Bar Navigasi Periode Bulan -->
+    <section class="comic-card bg-[#38BDF8] p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 bg-[#FFD93D] border-3 border-[#1E1B18] rounded-xl shadow-[2px_2px_0px_#1E1B18] flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-[#1E1B18]" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="3" />
+            <path d="M16 2v4M8 2v4M3 10h18" />
+          </svg>
+        </div>
+        <div>
+          <span class="text-[11px] font-black uppercase tracking-wider text-[#1E1B18] bg-white px-2 py-0.5 rounded-md border-2 border-[#1E1B18]">Buku Catatan Bulanan</span>
+          <h2 id="activePeriodTitle" class="text-base sm:text-lg font-bold text-[#1E1B18] mt-0.5">Memuat periode...</h2>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center gap-1.5 bg-white p-1 rounded-xl border-3 border-[#1E1B18] shadow-[3px_3px_0px_#1E1B18]">
+          <button id="prevMonthBtn" type="button" title="Bulan Sebelumnya"
+            class="p-1.5 rounded-lg bg-[#FFD93D] border-2 border-[#1E1B18] text-[#1E1B18] hover:bg-[#FACC15] active:translate-y-0.5 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <select id="monthSelect" aria-label="Pilih Bulan"
+            class="px-2 py-1 text-xs sm:text-sm font-extrabold text-[#1E1B18] bg-transparent focus:outline-none cursor-pointer">
+            <option value="01">Januari</option>
+            <option value="02">Februari</option>
+            <option value="03">Maret</option>
+            <option value="04">April</option>
+            <option value="05">Mei</option>
+            <option value="06">Juni</option>
+            <option value="07">Juli</option>
+            <option value="08">Agustus</option>
+            <option value="09">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+
+          <select id="yearSelect" aria-label="Pilih Tahun"
+            class="px-2 py-1 text-xs sm:text-sm font-extrabold text-[#1E1B18] bg-transparent border-l-2 border-[#1E1B18] focus:outline-none cursor-pointer">
+          </select>
+
+          <button id="nextMonthBtn" type="button" title="Bulan Berikutnya"
+            class="p-1.5 rounded-lg bg-[#FFD93D] border-2 border-[#1E1B18] text-[#1E1B18] hover:bg-[#FACC15] active:translate-y-0.5 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <button id="currentMonthBtn" type="button"
+          class="comic-btn px-3 py-2 text-xs font-extrabold rounded-xl bg-[#FFD93D] text-[#1E1B18]">
+          Bulan Ini
+        </button>
+        <button id="allMonthsBtn" type="button"
+          class="comic-btn px-3 py-2 text-xs font-extrabold rounded-xl bg-white text-[#1E1B18]">
+          Semua Bulan
+        </button>
+      </div>
+    </section>
+
+    <!-- 3 Kartu Ringkasan Keuangan dengan Reaksi Karakter -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- Kartu 1: Sisa Saldo + Wajah Reaksi Shin-chan -->
+      <div class="comic-card bg-[#FFF59D] p-4 sm:p-5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <span id="balanceLabel" class="inline-block text-[11px] font-black uppercase bg-white px-2.5 py-0.5 rounded-full border-2 border-[#1E1B18] text-[#1E1B18]">Sisa Saldo Bulan Ini</span>
+          <p id="totalBalance" class="text-2xl sm:text-3xl font-black text-[#1E1B18] mt-2 truncate">Rp 0</p>
+          <p id="balanceHint" class="text-xs font-extrabold text-[#1E1B18] mt-1">Uang jajan masih aman!</p>
+        </div>
+        <div id="shinchanMoodIcon" class="w-16 h-16 bg-white border-3 border-[#1E1B18] rounded-2xl shadow-[3px_3px_0px_#1E1B18] flex items-center justify-center shrink-0">
+          <!-- Diisi dinamis oleh JS -->
+        </div>
+      </div>
+
+      <!-- Kartu 2: Total Pemasukan + Lencana Action Kamen -->
+      <div class="comic-card bg-[#BBF7D0] p-4 sm:p-5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <span id="incomeLabel" class="inline-block text-[11px] font-black uppercase bg-white px-2.5 py-0.5 rounded-full border-2 border-[#1E1B18] text-[#1E1B18]">Pemasukan Bulan Ini</span>
+          <p id="totalIncome" class="text-2xl sm:text-3xl font-black text-[#15803D] mt-2 truncate">Rp 0</p>
+          <p class="text-xs font-extrabold text-[#1E1B18] mt-1">Uang saku & bonus masuk</p>
+        </div>
+        <div class="w-16 h-16 bg-[#38BDF8] border-3 border-[#1E1B18] rounded-2xl shadow-[3px_3px_0px_#1E1B18] flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 64 64" class="w-12 h-12">
+            <circle cx="32" cy="32" r="24" fill="#FFD93D" stroke="#1E1B18" stroke-width="3.5"/>
+            <polygon points="32,12 37,24 50,25 40,34 43,47 32,40 21,47 24,34 14,25 27,24" fill="#FF4D4D" stroke="#1E1B18" stroke-width="2.5"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Kartu 3: Total Pengeluaran + Kotak Chocobi -->
+      <div class="comic-card bg-[#FECACA] p-4 sm:p-5 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <span id="expenseLabel" class="inline-block text-[11px] font-black uppercase bg-white px-2.5 py-0.5 rounded-full border-2 border-[#1E1B18] text-[#1E1B18]">Pengeluaran Bulan Ini</span>
+          <p id="totalExpense" class="text-2xl sm:text-3xl font-black text-[#B91C1C] mt-2 truncate">Rp 0</p>
+          <p id="expenseRatioText" class="text-xs font-extrabold text-[#1E1B18] mt-1">0% dari pemasukan</p>
+        </div>
+        <div class="w-16 h-16 bg-[#FF85B3] border-3 border-[#1E1B18] rounded-2xl shadow-[3px_3px_0px_#1E1B18] flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 64 64" class="w-12 h-12">
+            <polygon points="32,6 54,19 54,45 32,58 10,45 10,19" fill="#FF4D8D" stroke="#1E1B18" stroke-width="3.5"/>
+            <polygon points="32,17 36,27 47,27 38,33 41,43 32,37 23,43 26,33 17,27 28,27" fill="#FFD93D" stroke="#1E1B18" stroke-width="2.5"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid Utama: Form Input + Grafik & Riwayat -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- Kolom Kiri: Form Tambah / Edit Transaksi -->
+      <section class="lg:col-span-5 comic-card p-5">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b-3 border-dashed border-[#1E1B18]">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-xl bg-[#FFD93D] border-2 border-[#1E1B18] flex items-center justify-center font-black text-base shadow-[2px_2px_0px_#1E1B18]">✏️</span>
+            <h2 id="formTitle" class="text-lg font-bold text-[#1E1B18]">Catat Transaksi Baru</h2>
+          </div>
+          <span id="editModeBadge" class="hidden text-xs font-black px-2.5 py-1 rounded-full bg-[#FFD93D] text-[#1E1B18] border-2 border-[#1E1B18]">Mode Edit</span>
+        </div>
+
+        <form id="transactionForm" class="space-y-4" novalidate>
+          <input type="hidden" id="editId" value="" />
+
+          <!-- Tipe Transaksi -->
+          <div>
+            <label class="block text-xs font-black uppercase text-[#1E1B18] mb-1.5">Jenis Catatan</label>
+            <div class="grid grid-cols-2 gap-2.5">
+              <label class="cursor-pointer">
+                <input type="radio" name="type" value="expense" class="peer sr-only" checked />
+                <div class="comic-btn text-center py-2.5 px-3 rounded-xl font-extrabold text-sm bg-white text-[#1E1B18] peer-checked:bg-[#FF4D4D] peer-checked:text-white">
+                  🍫 Pengeluaran
+                </div>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="type" value="income" class="peer sr-only" />
+                <div class="comic-btn text-center py-2.5 px-3 rounded-xl font-extrabold text-sm bg-white text-[#1E1B18] peer-checked:bg-[#4ADE80] peer-checked:text-[#1E1B18]">
+                  ⭐ Pemasukan
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Deskripsi -->
+          <div>
+            <label for="description" class="block text-xs font-black uppercase text-[#1E1B18] mb-1">Untuk Apa?</label>
+            <input type="text" id="description" placeholder="Contoh: Beli Chocobi, Nasi Goreng, Uang Saku"
+              class="comic-input w-full px-3.5 py-2.5 text-sm font-bold rounded-xl" />
+          </div>
+
+          <!-- Nominal -->
+          <div>
+            <label for="amount" class="block text-xs font-black uppercase text-[#1E1B18] mb-1">Nominal (Rp)</label>
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-black text-[#1E1B18]">Rp</span>
+              <input type="text" id="amount" inputmode="numeric" placeholder="25.000"
+                class="comic-input w-full pl-11 pr-3.5 py-2.5 text-sm font-black rounded-xl" />
+            </div>
+          </div>
+
+          <!-- Kategori & Tanggal -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="category" class="block text-xs font-black uppercase text-[#1E1B18] mb-1">Kategori</label>
+              <select id="category" class="comic-input w-full px-3 py-2.5 text-sm font-bold rounded-xl cursor-pointer"></select>
+            </div>
+            <div>
+              <label for="date" class="block text-xs font-black uppercase text-[#1E1B18] mb-1">Tanggal</label>
+              <input type="date" id="date" class="comic-input w-full px-3 py-2.5 text-sm font-bold rounded-xl" />
+            </div>
+          </div>
+
+          <!-- Pesan Validasi -->
+          <p id="formError" class="hidden text-xs font-extrabold text-[#B91C1C] bg-[#FEE2E2] px-3 py-2 rounded-xl border-2 border-[#1E1B18]"></p>
+
+          <!-- Tombol Submit & Batal -->
+          <div class="flex items-center gap-2.5 pt-1">
+            <button type="submit" id="submitBtn"
+              class="comic-btn flex-1 py-3 px-4 bg-[#FFD93D] text-[#1E1B18] font-black text-sm rounded-xl">
+              Simpan Catatan!
+            </button>
+            <button type="button" id="cancelEditBtn"
+              class="hidden comic-btn py-3 px-4 bg-white text-[#1E1B18] font-extrabold text-sm rounded-xl">
+              Batal
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Kolom Kanan: Grafik Pengeluaran & Riwayat -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- Grafik Donat Pengeluaran -->
+        <section class="comic-card p-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-2 border-b-3 border-dashed border-[#1E1B18]">
+            <div>
+              <h2 id="chartTitle" class="text-lg font-bold text-[#1E1B18]">Ringkasan Pengeluaran</h2>
+              <p id="chartSubtitle" class="text-xs font-bold text-stone-600">Distribusi jajan & belanja per kategori</p>
+            </div>
+            <span id="chartPeriodBadge" class="text-xs font-black px-3 py-1 rounded-full bg-[#C084FC] text-[#1E1B18] border-2 border-[#1E1B18] shadow-[2px_2px_0px_#1E1B18]">Bulan Ini</span>
+          </div>
+
+          <div id="chartWrapper" class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+            <div id="canvasContainer" class="sm:col-span-5 relative h-48 flex items-center justify-center">
+              <canvas id="expenseChart"></canvas>
+            </div>
+            <div id="categoryBreakdown" class="sm:col-span-7 space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+          </div>
+
+          <div id="chartEmptyState" class="hidden py-6 text-center">
+            <p class="text-sm font-extrabold text-stone-600">Belum ada pengeluaran pada periode ini. Waktunya hemat!</p>
+          </div>
+        </section>
+
+        <!-- Riwayat Transaksi + Maskot Anjing Shiro -->
+        <section class="comic-card p-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div class="flex items-center gap-2">
+              <h2 id="historyTitle" class="text-lg font-bold text-[#1E1B18]">Riwayat Catatan</h2>
+              <span id="transactionCount" class="text-xs font-black px-2.5 py-0.5 rounded-full bg-[#FFD93D] border-2 border-[#1E1B18]">0</span>
+            </div>
+
+            <div class="relative w-full sm:w-56">
+              <input type="text" id="searchInput" placeholder="Cari catatan..."
+                class="comic-input w-full pl-9 pr-3 py-1.5 text-xs font-bold rounded-xl" />
+              <svg class="w-4 h-4 text-[#1E1B18] absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <path stroke-linecap="round" d="M21 21l-4.35-4.35" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Filter Cepat -->
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b-3 border-dashed border-[#1E1B18]">
+            <div class="flex items-center gap-1.5" id="typeFilterGroup">
+              <button type="button" data-filter="all" class="filter-chip comic-btn px-3 py-1 text-xs font-black rounded-lg bg-[#FFD93D] text-[#1E1B18]">Semua</button>
+              <button type="button" data-filter="expense" class="filter-chip comic-btn px-3 py-1 text-xs font-extrabold rounded-lg bg-white text-[#1E1B18]">Pengeluaran</button>
+              <button type="button" data-filter="income" class="filter-chip comic-btn px-3 py-1 text-xs font-extrabold rounded-lg bg-white text-[#1E1B18]">Pemasukan</button>
+            </div>
+
+            <select id="categoryFilter" class="comic-input text-xs font-extrabold rounded-lg px-2.5 py-1.5 cursor-pointer">
+              <option value="all">Semua Kategori</option>
+            </select>
+          </div>
+
+          <!-- Daftar Transaksi -->
+          <div id="transactionList" class="space-y-3"></div>
+
+          <!-- Empty State dengan Animasi Anjing Shiro Tidur -->
+          <div id="emptyState" class="hidden py-8 text-center">
+            <div class="relative w-28 h-24 mx-auto mb-2">
+              <span class="anim-zzz-1 absolute -top-1 right-3 font-cartoon font-bold text-sm text-[#38BDF8]">Zzz</span>
+              <span class="anim-zzz-2 absolute top-2 right-0 font-cartoon font-bold text-xs text-[#C084FC]">z</span>
+              <!-- SVG Anjing Shiro Tidur Pulang -->
+              <svg viewBox="0 0 120 90" class="w-28 h-24 anim-shiro">
+                <ellipse cx="60" cy="78" rx="44" ry="7" fill="#E5D7B8"/>
+                <!-- Badan Kapas Shiro -->
+                <path d="M26 64 C20 50, 34 38, 52 40 C66 36, 86 42, 92 56 C96 68, 84 74, 60 74 C38 74, 28 72, 26 64 Z" fill="#FFFFFF" stroke="#1E1B18" stroke-width="3.5"/>
+                <!-- Kepala & Telinga Terkulai -->
+                <circle cx="36" cy="52" r="18" fill="#FFFFFF" stroke="#1E1B18" stroke-width="3.5"/>
+                <path d="M22 44 C14 48, 14 60, 22 62" fill="#FFFFFF" stroke="#1E1B18" stroke-width="3.5" stroke-linecap="round"/>
+                <!-- Kalung Biru -->
+                <path d="M48 44 Q54 56 48 68" fill="none" stroke="#38BDF8" stroke-width="5" stroke-linecap="round"/>
+                <!-- Mata Merem & Hidung -->
+                <path d="M28 52 Q32 55 36 52" fill="none" stroke="#1E1B18" stroke-width="2.8" stroke-linecap="round"/>
+                <circle cx="23" cy="55" r="3" fill="#1E1B18"/>
+              </svg>
+            </div>
+            <p id="emptyStateTitle" class="text-base font-black text-[#1E1B18]">Shiro lagi tidur, belum ada catatan!</p>
+            <p id="emptyStateDesc" class="text-xs font-bold text-stone-600 mt-1">Isi formulir di samping untuk mulai mencatat pengeluaranmu.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#FFD93D] border-t-4 border-[#1E1B18] mt-8 py-3 text-center relative z-10">
+    <p class="text-xs font-black text-[#1E1B18]">DompetKu Edisi Kasukabe • Data tersimpan aman di perangkatmu</p>
+  </footer>
+
+  <!-- Modal Konfirmasi Reset -->
+  <div id="confirmModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+    <div class="comic-card max-w-sm w-full p-5 bg-[#FFFDF5] anim-pop">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-11 h-11 rounded-2xl bg-[#FF4D4D] border-3 border-[#1E1B18] flex items-center justify-center text-white font-black text-xl shadow-[2px_2px_0px_#1E1B18]">!</div>
+        <h3 class="text-lg font-bold text-[#1E1B18]">Hapus Semua Catatan?</h3>
+      </div>
+      <p class="text-xs font-bold text-stone-700 leading-relaxed mb-5">Mama Misae mengingatkan: semua riwayat transaksi dari seluruh bulan akan terhapus permanen dan tidak bisa dikembalikan!</p>
+      <div class="flex justify-end gap-2.5">
+        <button id="cancelResetBtn" type="button" class="comic-btn px-4 py-2 text-xs font-extrabold text-[#1E1B18] bg-white rounded-xl">Batal</button>
+        <button id="confirmResetBtn" type="button" class="comic-btn px-4 py-2 text-xs font-black text-white bg-[#FF4D4D] rounded-xl">Ya, Hapus Semua</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifikasi -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-[#1E1B18] text-[#FFD93D] text-xs font-black px-4 py-3 rounded-2xl border-3 border-[#FFD93D] shadow-[4px_4px_0px_#1E1B18] flex items-center gap-2">
+      <span>⭐</span>
+      <span id="toastMessage">Tersimpan!</span>
+    </div>
+  </div>
+  <script>
+    const STORAGE_KEY = 'dompetku_transactions_v1';
+
+    const MONTH_NAMES = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    const CATEGORIES = {
+      expense: [
+        'Jajan & Chocobi',
+        'Makanan & Minuman',
+        'Transportasi',
+        'Belanja & Hobi',
+        'Tagihan & Kuota',
+        'Hiburan & Mainan',
+        'Kesehatan',
+        'Lainnya'
+      ],
+      income: [
+        'Uang Saku',
+        'Gaji & Honor',
+        'Bonus & Hadiah',
+        'Hasil Usaha',
+        'Lainnya'
+      ]
+    };
+
+    const CATEGORY_COLORS = {
+      'Jajan & Chocobi': '#FF4D8D',
+      'Makanan & Minuman': '#FF6B35',
+      'Transportasi': '#38BDF8',
+      'Belanja & Hobi': '#C084FC',
+      'Tagihan & Kuota': '#FACC15',
+      'Hiburan & Mainan': '#4ADE80',
+      'Kesehatan': '#FB7185',
+      'Uang Saku': '#22C55E',
+      'Gaji & Honor': '#16A34A',
+      'Bonus & Hadiah': '#0EA5E9',
+      'Hasil Usaha': '#8B5CF6',
+      'Lainnya': '#94A3B8'
+    };
+
+    const SHINCHAN_QUOTES = [
+      'Hore! Ayo nabung buat beli Chocobi!',
+      'Jangan boros ya, nanti dimarahi Mama Misae!',
+      'Action Kamen selalu mencatat uang jajannya!',
+      'Shiro juga ikut menjaga tabunganmu, guk!',
+      'Beli cemilan boleh, asal sisa saldo tetap aman!'
+    ];
+
+    function getLocalTodayString() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseLocalDateParts(dateStr) {
+      if (!dateStr || typeof dateStr !== 'string') return { year: '2026', month: '01', day: '01' };
+      const parts = dateStr.split('-');
+      return {
+        year: parts[0] || '2026',
+        month: (parts[1] || '01').padStart(2, '0'),
+        day: (parts[2] || '01').padStart(2, '0')
+      };
+    }
+
+    const todayStr = getLocalTodayString();
+    const todayParts = parseLocalDateParts(todayStr);
+
+    let transactions = [];
+    let filterMode = 'month';
+    let selectedYear = todayParts.year;
+    let selectedMonth = todayParts.month;
+    let currentTypeFilter = 'all';
+    let currentCategoryFilter = 'all';
+    let searchQuery = '';
+    let expenseChartInstance = null;
+    let toastTimer = null;
+
+    // Referensi DOM
+    const form = document.getElementById('transactionForm');
+    const editIdInput = document.getElementById('editId');
+    const descriptionInput = document.getElementById('description');
+    const amountInput = document.getElementById('amount');
+    const categorySelect = document.getElementById('category');
+    const dateInput = document.getElementById('date');
+    const formError = document.getElementById('formError');
+    const formTitle = document.getElementById('formTitle');
+    const editModeBadge = document.getElementById('editModeBadge');
+    const submitBtn = document.getElementById('submitBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+    const monthSelect = document.getElementById('monthSelect');
+    const yearSelect = document.getElementById('yearSelect');
+    const prevMonthBtn = document.getElementById('prevMonthBtn');
+    const nextMonthBtn = document.getElementById('nextMonthBtn');
+    const currentMonthBtn = document.getElementById('currentMonthBtn');
+    const allMonthsBtn = document.getElementById('allMonthsBtn');
+    const activePeriodTitle = document.getElementById('activePeriodTitle');
+
+    const totalBalanceEl = document.getElementById('totalBalance');
+    const totalIncomeEl = document.getElementById('totalIncome');
+    const totalExpenseEl = document.getElementById('totalExpense');
+    const expenseRatioTextEl = document.getElementById('expenseRatioText');
+    const balanceHintEl = document.getElementById('balanceHint');
+    const shinchanMoodIconEl = document.getElementById('shinchanMoodIcon');
+    const balanceLabelEl = document.getElementById('balanceLabel');
+    const incomeLabelEl = document.getElementById('incomeLabel');
+    const expenseLabelEl = document.getElementById('expenseLabel');
+    const chartPeriodBadge = document.getElementById('chartPeriodBadge');
+
+    const transactionListEl = document.getElementById('transactionList');
+    const emptyStateEl = document.getElementById('emptyState');
+    const emptyStateTitleEl = document.getElementById('emptyStateTitle');
+    const emptyStateDescEl = document.getElementById('emptyStateDesc');
+    const transactionCountEl = document.getElementById('transactionCount');
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const categoryBreakdownEl = document.getElementById('categoryBreakdown');
+    const chartWrapperEl = document.getElementById('chartWrapper');
+    const chartEmptyStateEl = document.getElementById('chartEmptyState');
+    const canvasContainerEl = document.getElementById('canvasContainer');
+
+    // Animasi & Dialog Maskot Shin-chan
+    function triggerShinchanDance() {
+      const box = document.getElementById('shinchanAvatarBox');
+      const speech = document.getElementById('shinchanSpeech');
+      box.classList.remove('anim-dance');
+      void box.offsetWidth;
+      box.classList.add('anim-dance');
+
+      const randomQuote = SHINCHAN_QUOTES[Math.floor(Math.random() * SHINCHAN_QUOTES.length)];
+      speech.textContent = randomQuote;
+    }
+
+    function launchMiniConfetti() {
+      const layer = document.getElementById('confettiLayer');
+      const colors = ['#FFD93D', '#FF4D4D', '#4ADE80', '#38BDF8', '#FF85B3'];
+      for (let i = 0; i < 18; i++) {
+        const dot = document.createElement('div');
+        dot.style.position = 'absolute';
+        dot.style.left = (15 + Math.random() * 70) + '%';
+        dot.style.top = '18%';
+        dot.style.width = '10px';
+        dot.style.height = '10px';
+        dot.style.backgroundColor = colors[i % colors.length];
+        dot.style.border = '2px solid #1E1B18';
+        dot.style.borderRadius = i % 2 === 0 ? '50%' : '2px';
+        dot.style.animation = `confettiFall ${0.7 + Math.random() * 0.6}s ease-out forwards`;
+        layer.appendChild(dot);
+        setTimeout(() => dot.remove(), 1400);
+      }
+    }
+
+    function formatRupiah(num) {
+      const isNegative = num < 0;
+      const formatted = Math.abs(Math.round(num)).toLocaleString('id-ID');
+      return `${isNegative ? '-' : ''}Rp ${formatted}`;
+    }
+
+    function formatDateIndo(dateStr) {
+      const { year, month, day } = parseLocalDateParts(dateStr);
+      const mIdx = Math.max(0, Math.min(11, parseInt(month, 10) - 1));
+      return `${parseInt(day, 10)} ${MONTH_NAMES[mIdx]} ${year}`;
+    }
+
+    function getPeriodDisplayName() {
+      if (filterMode === 'all') return 'Semua Bulan';
+      const mIdx = parseInt(selectedMonth, 10) - 1;
+      return `${MONTH_NAMES[mIdx]} ${selectedYear}`;
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').textContent = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 2600);
+    }
+
+    function loadTransactions() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveTransactions() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+      } catch (e) {
+        showToast('Gagal menyimpan ke memori browser.');
+      }
+    }
+
+    function populateYearOptions() {
+      const currentYr = parseInt(todayParts.year, 10);
+      const years = new Set([currentYr - 2, currentYr - 1, currentYr, currentYr + 1]);
+      transactions.forEach(t => {
+        const y = parseInt(parseLocalDateParts(t.date).year, 10);
+        if (!isNaN(y)) years.add(y);
+      });
+      years.add(parseInt(selectedYear, 10));
+
+      const sorted = Array.from(years).sort((a, b) => b - a);
+      yearSelect.innerHTML = sorted.map(y => `<option value="${y}">${y}</option>`).join('');
+      yearSelect.value = selectedYear;
+    }
+
+    function syncFormDateWithSelectedPeriod() {
+      if (editIdInput.value || filterMode !== 'month') return;
+      const currentFormParts = parseLocalDateParts(dateInput.value || todayStr);
+      const maxDayInMonth = new Date(parseInt(selectedYear, 10), parseInt(selectedMonth, 10), 0).getDate();
+      const clampedDay = String(Math.min(parseInt(currentFormParts.day, 10), maxDayInMonth)).padStart(2, '0');
+      dateInput.value = `${selectedYear}-${selectedMonth}-${clampedDay}`;
+    }
+
+    function updatePeriodUI() {
+      monthSelect.value = selectedMonth;
+      populateYearOptions();
+
+      const periodName = getPeriodDisplayName();
+      if (filterMode === 'all') {
+        activePeriodTitle.textContent = 'Semua Periode (Keseluruhan)';
+        balanceLabelEl.textContent = 'Total Saldo Keseluruhan';
+        incomeLabelEl.textContent = 'Total Pemasukan';
+        expenseLabelEl.textContent = 'Total Pengeluaran';
+        chartPeriodBadge.textContent = 'Semua Bulan';
+
+        allMonthsBtn.classList.remove('bg-white');
+        allMonthsBtn.classList.add('bg-[#FFD93D]');
+        currentMonthBtn.classList.remove('bg-[#FFD93D]');
+        currentMonthBtn.classList.add('bg-white');
+      } else {
+        activePeriodTitle.textContent = `Periode: ${periodName}`;
+        balanceLabelEl.textContent = `Sisa Saldo (${periodName})`;
+        incomeLabelEl.textContent = `Pemasukan (${periodName})`;
+        expenseLabelEl.textContent = `Pengeluaran (${periodName})`;
+        chartPeriodBadge.textContent = periodName;
+
+        allMonthsBtn.classList.remove('bg-[#FFD93D]');
+        allMonthsBtn.classList.add('bg-white');
+
+        const isNow = selectedYear === todayParts.year && selectedMonth === todayParts.month;
+        if (isNow) {
+          currentMonthBtn.classList.remove('bg-white');
+          currentMonthBtn.classList.add('bg-[#FFD93D]');
+        } else {
+          currentMonthBtn.classList.remove('bg-[#FFD93D]');
+          currentMonthBtn.classList.add('bg-white');
+        }
+      }
+    }
+
+    function shiftMonth(delta) {
+      filterMode = 'month';
+      let y = parseInt(selectedYear, 10);
+      let m = parseInt(selectedMonth, 10) + delta;
+      if (m < 1) { m = 12; y -= 1; }
+      else if (m > 12) { m = 1; y += 1; }
+      selectedYear = String(y);
+      selectedMonth = String(m).padStart(2, '0');
+      syncFormDateWithSelectedPeriod();
+      renderApp();
+    }
+
+    function updateCategoryDropdown(type, selectedCat = null) {
+      const list = CATEGORIES[type] || CATEGORIES.expense;
+      categorySelect.innerHTML = list.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+      if (selectedCat && list.includes(selectedCat)) {
+        categorySelect.value = selectedCat;
+      }
+    }
+
+    function updateCategoryFilterDropdown(periodTransactions) {
+      const usedCats = Array.from(new Set(periodTransactions.map(t => t.category)));
+      const prev = categoryFilter.value;
+      categoryFilter.innerHTML = '<option value="all">Semua Kategori</option>' +
+        usedCats.map(c => `<option value="${c}">${c}</option>`).join('');
+      if (usedCats.includes(prev)) {
+        categoryFilter.value = prev;
+      } else {
+        currentCategoryFilter = 'all';
+        categoryFilter.value = 'all';
+      }
+    }
+
+    amountInput.addEventListener('input', (e) => {
+      const digits = e.target.value.replace(/\D/g, '');
+      e.target.value = digits ? parseInt(digits, 10).toLocaleString('id-ID') : '';
+    });
+
+    document.querySelectorAll('input[name="type"]').forEach(radio => {
+      radio.addEventListener('change', (e) => updateCategoryDropdown(e.target.value));
+    });
+
+    function getTransactionsForSelectedPeriod() {
+      if (filterMode === 'all') return [...transactions];
+      return transactions.filter(t => {
+        const p = parseLocalDateParts(t.date);
+        return p.year === selectedYear && p.month === selectedMonth;
+      });
+    }
+
+    function updateMoodCard(balance, income, expense) {
+      if (balance < 0) {
+        balanceHintEl.textContent = 'Waduh! Saldo minus, awas benjol!';
+        shinchanMoodIconEl.innerHTML = `
+          <svg viewBox="0 0 64 64" class="w-12 h-12">
+            <circle cx="32" cy="34" r="22" fill="#FDBA8C" stroke="#1E1B18" stroke-width="3"/>
+            <ellipse cx="32" cy="11" rx="8" ry="6" fill="#FF4D4D" stroke="#1E1B18" stroke-width="2.5"/>
+            <path d="M20 28 L27 33 M27 28 L20 33 M37 28 L44 33 M44 28 L37 33" stroke="#1E1B18" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M24 46 Q32 40 40 46" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+          </svg>`;
+      } else if (income > 0 && expense / income >= 0.75) {
+        balanceHintEl.textContent = 'Hati-hati! Uang jajan hampir habis!';
+        shinchanMoodIconEl.innerHTML = `
+          <svg viewBox="0 0 64 64" class="w-12 h-12">
+            <circle cx="32" cy="33" r="22" fill="#FDBA8C" stroke="#1E1B18" stroke-width="3"/>
+            <path d="M50 16 C53 22, 53 26, 50 28 C47 26, 47 22, 50 16 Z" fill="#38BDF8" stroke="#1E1B18" stroke-width="2"/>
+            <circle cx="24" cy="31" r="4" fill="#1E1B18"/>
+            <circle cx="40" cy="31" r="4" fill="#1E1B18"/>
+            <path d="M23 44 Q28 41 32 44 Q36 47 41 44" fill="none" stroke="#1E1B18" stroke-width="3" stroke-linecap="round"/>
+          </svg>`;
+      } else {
+        balanceHintEl.textContent = 'Mantap! Tabungan aman terkendali!';
+        shinchanMoodIconEl.innerHTML = `
+          <svg viewBox="0 0 64 64" class="w-12 h-12">
+            <circle cx="32" cy="33" r="22" fill="#FDBA8C" stroke="#1E1B18" stroke-width="3"/>
+            <path d="M18 24 Q24 19 29 24 M35 24 Q40 19 46 24" fill="none" stroke="#1E1B18" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="24" cy="31" r="4" fill="#1E1B18"/>
+            <circle cx="40" cy="31" r="4" fill="#1E1B18"/>
+            <path d="M24 41 Q32 50 40 41 Z" fill="#FF4D4D" stroke="#1E1B18" stroke-width="2.5"/>
+          </svg>`;
+      }
+    }
+
+    function renderSummary(periodTransactions) {
+      let income = 0;
+      let expense = 0;
+      periodTransactions.forEach(t => {
+        if (t.type === 'income') income += t.amount;
+        else expense += t.amount;
+      });
+
+      const balance = income - expense;
+      totalBalanceEl.textContent = formatRupiah(balance);
+      totalIncomeEl.textContent = formatRupiah(income);
+      totalExpenseEl.textContent = formatRupiah(expense);
+
+      totalBalanceEl.className = `text-2xl sm:text-3xl font-black mt-2 truncate ${balance < 0 ? 'text-[#B91C1C]' : 'text-[#1E1B18]'}`;
+      updateMoodCard(balance, income, expense);
+
+      if (income > 0) {
+        const pct = Math.round((expense / income) * 100);
+        expenseRatioTextEl.textContent = `${pct}% dari pemasukan`;
+      } else if (expense > 0) {
+        expenseRatioTextEl.textContent = 'Belum ada pemasukan tercatat';
+      } else {
+        expenseRatioTextEl.textContent = '0% dari pemasukan';
+      }
+    }
+
+    function renderChart(periodTransactions) {
+      const expenses = periodTransactions.filter(t => t.type === 'expense');
+      if (expenses.length === 0) {
+        chartWrapperEl.classList.add('hidden');
+        chartEmptyStateEl.classList.remove('hidden');
+        if (expenseChartInstance) {
+          expenseChartInstance.destroy();
+          expenseChartInstance = null;
+        }
+        return;
+      }
+
+      chartWrapperEl.classList.remove('hidden');
+      chartEmptyStateEl.classList.add('hidden');
+
+      const totalsByCat = {};
+      let grandExpense = 0;
+      expenses.forEach(t => {
+        totalsByCat[t.category] = (totalsByCat[t.category] || 0) + t.amount;
+        grandExpense += t.amount;
+      });
+
+      const sortedEntries = Object.entries(totalsByCat).sort((a, b) => b[1] - a[1]);
+      const labels = sortedEntries.map(e => e[0]);
+      const values = sortedEntries.map(e => e[1]);
+      const colors = labels.map(cat => CATEGORY_COLORS[cat] || '#94A3B8');
+
+      categoryBreakdownEl.innerHTML = sortedEntries.map(([cat, val]) => {
+        const pct = grandExpense > 0 ? Math.round((val / grandExpense) * 100) : 0;
+        const color = CATEGORY_COLORS[cat] || '#94A3B8';
+        return `
+          <div class="bg-[#FFFDF5] p-2.5 rounded-xl border-2 border-[#1E1B18]">
+            <div class="flex items-center justify-between text-xs mb-1">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="w-3 h-3 rounded-full border-2 border-[#1E1B18] shrink-0" style="background-color:${color}"></span>
+                <span class="font-extrabold text-[#1E1B18] truncate">${cat}</span>
+              </div>
+              <span class="font-black text-[#1E1B18] shrink-0 ml-2">${formatRupiah(val)} (${pct}%)</span>
+            </div>
+            <div class="w-full h-2.5 bg-white rounded-full border-2 border-[#1E1B18] overflow-hidden">
+              <div class="h-full" style="width:${pct}%; background-color:${color}"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (typeof window.Chart !== 'undefined') {
+        canvasContainerEl.classList.remove('hidden');
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        if (expenseChartInstance) expenseChartInstance.destroy();
+
+        expenseChartInstance = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels,
+            datasets: [{
+              data: values,
+              backgroundColor: colors,
+              borderColor: '#1E1B18',
+              borderWidth: 3,
+              hoverOffset: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#1E1B18',
+                titleColor: '#FFD93D',
+                bodyColor: '#FFFFFF',
+                padding: 10,
+                callbacks: {
+                  label: (context) => ` ${formatRupiah(context.raw)}`
+                }
+              }
+            }
+          }
+        });
+      } else {
+        canvasContainerEl.classList.add('hidden');
+      }
+    }
+
+    function escapeHTML(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function renderTransactions(periodTransactions) {
+      const filtered = periodTransactions
+        .filter(t => {
+          if (currentTypeFilter !== 'all' && t.type !== currentTypeFilter) return false;
+          if (currentCategoryFilter !== 'all' && t.category !== currentCategoryFilter) return false;
+          if (searchQuery.trim() !== '') {
+            const q = searchQuery.toLowerCase();
+            if (!t.description.toLowerCase().includes(q) && !t.category.toLowerCase().includes(q)) return false;
+          }
+          return true;
+        })
+        .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+
+      transactionCountEl.textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        transactionListEl.innerHTML = '';
+        emptyStateEl.classList.remove('hidden');
+        if (periodTransactions.length === 0) {
+          emptyStateTitleEl.textContent = `Shiro lagi tidur, belum ada catatan di ${getPeriodDisplayName()}!`;
+          emptyStateDescEl.textContent = 'Isi formulir untuk menambahkan pemasukan atau pengeluaran.';
+        } else {
+          emptyStateTitleEl.textContent = 'Catatan tidak ditemukan';
+          emptyStateDescEl.textContent = 'Coba ubah kata kunci pencarian atau filter kategori.';
+        }
+        return;
+      }
+
+      emptyStateEl.classList.add('hidden');
+
+      transactionListEl.innerHTML = filtered.map(t => {
+        const isIncome = t.type === 'income';
+        const badgeBg = isIncome ? 'bg-[#BBF7D0]' : 'bg-[#FECACA]';
+        const amountColor = isIncome ? 'text-[#15803D]' : 'text-[#B91C1C]';
+        const sign = isIncome ? '+' : '-';
+
+        return `
+          <div class="comic-card-sm p-3.5 flex items-center justify-between gap-3 hover:bg-[#FFFDF5] transition anim-pop">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-10 h-10 rounded-xl border-2 border-[#1E1B18] ${badgeBg} flex items-center justify-center shrink-0 font-black text-base shadow-[2px_2px_0px_#1E1B18]">
+                ${isIncome ? '⭐' : '🍫'}
+              </div>
+              <div class="min-w-0">
+                <p class="text-sm font-black text-[#1E1B18] truncate">${escapeHTML(t.description)}</p>
+                <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                  <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-md bg-[#FFD93D] text-[#1E1B18] border border-[#1E1B18]">${escapeHTML(t.category)}</span>
+                  <span class="text-[11px] font-bold text-stone-600">${formatDateIndo(t.date)}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-sm sm:text-base font-black ${amountColor}">${sign}${formatRupiah(t.amount)}</span>
+              <div class="flex items-center gap-1">
+                <button type="button" onclick="startEditTransaction('${t.id}')" title="Edit"
+                  class="p-1.5 rounded-lg bg-[#38BDF8] text-[#1E1B18] border-2 border-[#1E1B18] hover:bg-[#7DD3FC] transition">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+                <button type="button" onclick="deleteTransaction('${t.id}')" title="Hapus"
+                  class="p-1.5 rounded-lg bg-[#FF4D4D] text-white border-2 border-[#1E1B18] hover:bg-[#F87171] transition">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderApp() {
+      updatePeriodUI();
+      const periodTransactions = getTransactionsForSelectedPeriod();
+      updateCategoryFilterDropdown(periodTransactions);
+      renderSummary(periodTransactions);
+      renderChart(periodTransactions);
+      renderTransactions(periodTransactions);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      formError.classList.add('hidden');
+
+      const type = document.querySelector('input[name="type"]:checked').value;
+      const description = descriptionInput.value.trim();
+      const rawDigits = amountInput.value.replace(/\D/g, '');
+      const amount = parseInt(rawDigits, 10);
+      const category = categorySelect.value;
+      const date = dateInput.value;
+
+      if (!description) {
+        formError.textContent = 'Isi dulu nama catatan transaksinya ya!';
+        formError.classList.remove('hidden');
+        descriptionInput.focus();
+        return;
+      }
+      if (!amount || amount <= 0) {
+        formError.textContent = 'Masukkan nominal rupiah lebih dari 0!';
+        formError.classList.remove('hidden');
+        amountInput.focus();
+        return;
+      }
+      if (!date) {
+        formError.textContent = 'Pilih tanggal transaksi dulu!';
+        formError.classList.remove('hidden');
+        dateInput.focus();
+        return;
+      }
+
+      const txDateParts = parseLocalDateParts(date);
+      const editId = editIdInput.value;
+
+      if (editId) {
+        const idx = transactions.findIndex(t => t.id === editId);
+        if (idx !== -1) {
+          transactions[idx] = { ...transactions[idx], type, description, amount, category, date };
+          showToast('Catatan berhasil diperbarui!');
+        }
+        resetFormState();
+      } else {
+        transactions.push({
+          id: String(Date.now()) + '_' + Math.random().toString(36).slice(2, 6),
+          type,
+          description,
+          amount,
+          category,
+          date
+        });
+        showToast('Hore! Catatan baru tersimpan!');
+        launchMiniConfetti();
+        triggerShinchanDance();
+        descriptionInput.value = '';
+        amountInput.value = '';
+      }
+
+      if (filterMode === 'month') {
+        selectedYear = txDateParts.year;
+        selectedMonth = txDateParts.month;
+      }
+
+      saveTransactions();
+      renderApp();
+    });
+
+    window.startEditTransaction = function(id) {
+      const tx = transactions.find(t => t.id === id);
+      if (!tx) return;
+
+      editIdInput.value = tx.id;
+      const radio = document.querySelector(`input[name="type"][value="${tx.type}"]`);
+      if (radio) radio.checked = true;
+
+      updateCategoryDropdown(tx.type, tx.category);
+      descriptionInput.value = tx.description;
+      amountInput.value = tx.amount.toLocaleString('id-ID');
+      dateInput.value = tx.date;
+
+      formTitle.textContent = 'Edit Catatan';
+      editModeBadge.classList.remove('hidden');
+      submitBtn.textContent = 'Simpan Perubahan';
+      cancelEditBtn.classList.remove('hidden');
+      formError.classList.add('hidden');
+
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    function resetFormState() {
+      editIdInput.value = '';
+      descriptionInput.value = '';
+      amountInput.value = '';
+      formError.classList.add('hidden');
+      formTitle.textContent = 'Catat Transaksi Baru';
+      editModeBadge.classList.add('hidden');
+      submitBtn.textContent = 'Simpan Catatan!';
+      cancelEditBtn.classList.add('hidden');
+
+      const expenseRadio = document.querySelector('input[name="type"][value="expense"]');
+      if (expenseRadio) expenseRadio.checked = true;
+      updateCategoryDropdown('expense');
+      syncFormDateWithSelectedPeriod();
+    }
+
+    cancelEditBtn.addEventListener('click', resetFormState);
+
+    window.deleteTransaction = function(id) {
+      if (editIdInput.value === id) resetFormState();
+      transactions = transactions.filter(t => t.id !== id);
+      saveTransactions();
+      renderApp();
+      showToast('Catatan dihapus.');
+    };
+
+    prevMonthBtn.addEventListener('click', () => shiftMonth(-1));
+    nextMonthBtn.addEventListener('click', () => shiftMonth(1));
+
+    monthSelect.addEventListener('change', (e) => {
+      filterMode = 'month';
+      selectedMonth = e.target.value;
+      syncFormDateWithSelectedPeriod();
+      renderApp();
+    });
+
+    yearSelect.addEventListener('change', (e) => {
+      filterMode = 'month';
+      selectedYear = e.target.value;
+      syncFormDateWithSelectedPeriod();
+      renderApp();
+    });
+
+    currentMonthBtn.addEventListener('click', () => {
+      const nowParts = parseLocalDateParts(getLocalTodayString());
+      filterMode = 'month';
+      selectedYear = nowParts.year;
+      selectedMonth = nowParts.month;
+      syncFormDateWithSelectedPeriod();
+      renderApp();
+    });
+
+    allMonthsBtn.addEventListener('click', () => {
+      filterMode = 'all';
+      renderApp();
+    });
+
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentTypeFilter = btn.dataset.filter;
+        document.querySelectorAll('.filter-chip').forEach(b => {
+          b.classList.remove('bg-[#FFD93D]', 'font-black');
+          b.classList.add('bg-white', 'font-extrabold');
+        });
+        btn.classList.remove('bg-white', 'font-extrabold');
+        btn.classList.add('bg-[#FFD93D]', 'font-black');
+        renderTransactions(getTransactionsForSelectedPeriod());
+      });
+    });
+
+    categoryFilter.addEventListener('change', (e) => {
+      currentCategoryFilter = e.target.value;
+      renderTransactions(getTransactionsForSelectedPeriod());
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderTransactions(getTransactionsForSelectedPeriod());
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const periodTransactions = getTransactionsForSelectedPeriod();
+      if (periodTransactions.length === 0) {
+        showToast('Tidak ada data di periode ini untuk diekspor.');
+        return;
+      }
+
+      const headers = ['Tanggal', 'Tipe', 'Kategori', 'Deskripsi', 'Nominal'];
+      const rows = periodTransactions
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .map(t => [
+          t.date,
+          t.type === 'income' ? 'Pemasukan' : 'Pengeluaran',
+          `"${t.category.replace(/"/g, '""')}"`,
+          `"${t.description.replace(/"/g, '""')}"`,
+          t.amount
+        ].join(','));
+
+      const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const suffix = filterMode === 'all' ? 'semua_bulan' : `${selectedYear}_${selectedMonth}`;
+      a.href = url;
+      a.download = `DompetKu_Shinchan_${suffix}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('File CSV berhasil diunduh!');
+    });
+
+    const confirmModal = document.getElementById('confirmModal');
+    document.getElementById('resetBtn').addEventListener('click', () => confirmModal.classList.remove('hidden'));
+    document.getElementById('cancelResetBtn').addEventListener('click', () => confirmModal.classList.add('hidden'));
+    confirmModal.addEventListener('click', (e) => {
+      if (e.target === confirmModal) confirmModal.classList.add('hidden');
+    });
+
+    document.getElementById('confirmResetBtn').addEventListener('click', () => {
+      transactions = [];
+      saveTransactions();
+      resetFormState();
+      renderApp();
+      confirmModal.classList.add('hidden');
+      showToast('Semua catatan telah dibersihkan.');
+    });
+
+    // Inisialisasi Awal
+    transactions = loadTransactions();
+    dateInput.value = todayStr;
+    updateCategoryDropdown('expense');
+    renderApp();
+  </script>
+</body>
+</html>
